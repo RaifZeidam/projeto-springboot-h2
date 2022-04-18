@@ -7,9 +7,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Configuration;
 
+import com.meuprojeto.projetospringbooth2.entities.Category;
 import com.meuprojeto.projetospringbooth2.entities.Order;
 import com.meuprojeto.projetospringbooth2.entities.User;
 import com.meuprojeto.projetospringbooth2.entities.enums.OrderStatus;
+import com.meuprojeto.projetospringbooth2.repositories.CategoryRepository;
 import com.meuprojeto.projetospringbooth2.repositories.OrderRepository;
 import com.meuprojeto.projetospringbooth2.repositories.UserRepository;
 
@@ -21,10 +23,19 @@ public class Config implements CommandLineRunner {
 	
 	@Autowired
 	private OrderRepository orderRepository;
+	
+	@Autowired
+	private CategoryRepository categoryRepository;
 
 	@Override
 	public void run(String... args) throws Exception {
 
+		Category cat1 = new Category(null, "Electronics");
+		Category cat2 = new Category(null, "Books");
+		Category cat3 = new Category(null, "Computers");
+		
+		categoryRepository.saveAll(Arrays.asList(cat1, cat2, cat3));
+		
 		User u1 = new User(null, "Maria Silva", "maria@gmail.com", "999999999", "12345");
 		User u2 = new User(null, "Jose Silva", "jose@gmail.com", "888888888", "12345");
 		
