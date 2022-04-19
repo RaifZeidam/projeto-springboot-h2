@@ -21,7 +21,7 @@ import com.meuprojeto.projetospringbooth2.repositories.ProductRepository;
 import com.meuprojeto.projetospringbooth2.repositories.UserRepository;
 
 @Configuration
-public class Config implements CommandLineRunner {
+public class TestConfig implements CommandLineRunner {
 
 	@Autowired
 	private UserRepository userRepository;
