@@ -1,6 +1,9 @@
 package com.meuprojeto.projetospringbooth2.config;
 
+import static com.meuprojeto.projetospringbooth2.config.SecutiryConstants.*;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -17,10 +20,33 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	@Autowired
 	private CustomUserDetailService customUserDetailService;
 	
+//	@Override
+//	protected void configure(HttpSecurity http) throws Exception {
+//		http.authorizeRequests().anyRequest().authenticated().and().httpBasic()
+//		.and().csrf().disable();
+//	}
+	
+//	@Override
+//	protected void configure(HttpSecurity http) throws Exception {
+//		http.authorizeRequests()
+//		.antMatchers("*/protected/**").hasRole("USER")
+//		.antMatchers("*/admin/**").hasRole("ADMIN")
+//		.and()
+//		.httpBasic()
+//		.and()
+//		.csrf()
+//		.disable();
+//	}
+	
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
-		http.authorizeRequests().anyRequest().authenticated().and().httpBasic()
-		.and().csrf().disable();
+		http.cors().and().csrf().disable().authorizeRequests()
+				.antMatchers(HttpMethod.GET, SIGN_UP_URL).permitAll()
+				.antMatchers("*/protected/**").hasRole("USER")
+				.antMatchers("*/admin/**").hasRole("ADMIN")
+				.and()
+				.addFilter(new JWTAuthenticationFilter(authenticationManager()))
+				.addFilter(new JWTAuthorizationFilter(authenticationManager(), customUserDetailService));
 	}
 	
 	@Override
@@ -28,11 +54,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		auth.userDetailsService(customUserDetailService).passwordEncoder(new BCryptPasswordEncoder());
 	}
 	
-/*	@Autowired
-*	public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
-*		auth.inMemoryAuthentication()
-*			.withUser("user").password("123").roles("USER")
-*			.and()
-*			.withUser("admin").password("123").roles("USER", "ADMIN");
-	}*/
+//	@Autowired
+//	public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
+//		auth.inMemoryAuthentication()
+//			.withUser("user").password("123").roles("USER")
+//			.and()
+//		.withUser("admin").password("123").roles("USER", "ADMIN");
+//	}
 }

@@ -28,20 +28,20 @@ public class UserResource {
 	@Autowired
 	private UserService service;
 	
-	@GetMapping
+	@GetMapping(path = "protected")
 	public ResponseEntity<List<User>> findAll(){
 		List<User> list = service.findAll();
 		return ResponseEntity.ok().body(list);
 	}
 	
-	@GetMapping(value = "/{id}")
+	@GetMapping(value = "protected/{id}")
 	public ResponseEntity<User> findById(@PathVariable Long id) {
 		User obj = service.findById(id);
 		return ResponseEntity.ok().body(obj);
 	}
 	
-	@PostMapping
-	@PreAuthorize("hasRole('ADMIN')")
+	@PostMapping(path = "admin")
+	/* @PreAuthorize("hasRole('ADMIN')") */
 	public ResponseEntity<User> insert(@RequestBody User obj) {
 		obj = service.insert(obj);
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
@@ -49,15 +49,15 @@ public class UserResource {
 		return ResponseEntity.created(uri).body(obj);
 	}
 	
-	@DeleteMapping(value = "/{id}")
-	@PreAuthorize("hasRole('ADMIN')")
+	@DeleteMapping(value = "admin/{id}")
+	/* @PreAuthorize("hasRole('ADMIN')") */
 	public ResponseEntity<Void> delete(@PathVariable Long id) {
 		service.delete(id);
 		return ResponseEntity.noContent().build();
 	}
 	
-	@PutMapping(value = "/{id}")
-	@PreAuthorize("hasRole('ADMIN')")
+	@PutMapping(value = "admin/{id}")
+	/* @PreAuthorize("hasRole('ADMIN')") */
 	public ResponseEntity<User> update(@PathVariable Long id, @RequestBody User obj) {
 		obj = service.update(id, obj);
 		return ResponseEntity.ok().body(obj);
